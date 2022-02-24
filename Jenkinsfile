@@ -5,7 +5,7 @@ node {
     env.AWS_ECR_LOGIN=true
     def newApp
     def registry = 'swagatam04/nodejs-build'
-    def registryCredential = 'dockerhub'
+    def registryCredential = 'pAKHI08101992@'
 	
 	stage('Git') {
 		git 'https://github.com/SWAGATAM04/nodejs.git'
