@@ -1,12 +1,11 @@
-node {
-    
-	
-
-    env.AWS_ECR_LOGIN=true
-    def newApp
-    def registry = 'swagatam04/nodejs-build'
-    def registryCredential = 'dockerhub'
-	
+pipeline { 
+    environment { 
+        registry = "swagatam04/nodejs-build" 
+        registryCredential = 'dockerhub' 
+        dockerImage = '' 
+    }
+    agent any 
+      stages { 
 	stage('Git') {
 		git 'https://github.com/SWAGATAM04/nodejs.git'
 	}
