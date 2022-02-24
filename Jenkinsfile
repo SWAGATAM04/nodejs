@@ -17,7 +17,7 @@ node {
 		sh 'npm test'
 	}
 	stage('Building image') {
-        docker.withRegistry('https://docker.io' + registry, registryCredential) {
+        docker.withRegistry('https://index.docker.io/' + registry, registryCredential) {
 		    def buildName = registry + ":$BUILD_NUMBER"
 			newApp = docker.build buildName
 			newApp.push()
@@ -25,7 +25,7 @@ node {
 	}
 	stage('Registring image') {
 		
-        docker.withRegistry( 'https://index.docker.io' + registryCredential ) {
+        docker.withRegistry( 'https://docker.io/' + registry, registryCredential ) {
     		newApp.push 'latest2'
         }
 	}
