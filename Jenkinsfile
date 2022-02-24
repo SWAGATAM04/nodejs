@@ -17,7 +17,7 @@ node {
 		sh 'npm test'
 	}
 	stage('Building image') {
-        docker.withRegistry('https://hub.docker.com/') {
+        docker.withRegistry('https://docker.io/') {
 		    def buildName = registry + ":$BUILD_NUMBER"
 			newApp = docker.build buildName
 			newApp.push()
