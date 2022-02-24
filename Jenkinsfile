@@ -7,13 +7,19 @@ pipeline {
     agent any 
       stages { 
 	stage('Git') {
-		git 'https://github.com/SWAGATAM04/nodejs.git'
+		steps {
+			git 'https://github.com/SWAGATAM04/nodejs.git'
+	           }
 	}
 	stage('Build') {
-		sh 'npm install'
+		steps {
+			sh 'npm install'
+	              }
 	}
 	stage('Test') {
-		sh 'npm test'
+	        steps {
+			sh 'npm test'
+		      }
 	}
 	stage('Building our image') { 
             steps { 
