@@ -24,7 +24,8 @@ node {
         }
 	}
 	stage('Registring image') {
-        docker.withRegistry( 'https://docker.io/' + registry, registryCredential ) {
+		
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
     		newApp.push 'latest2'
         }
 	}
