@@ -4,8 +4,9 @@ pipeline {
         AWS_DEFAULT_REGION="us-east-2" 
         IMAGE_REPO_NAME="nodejs-build"
         IMAGE_TAG=""
-        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        registry = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         dockerImage = '' 
+	registryCredential = 'ecr-cred'
     }
     agent any 
       stages { 
@@ -25,34 +26,28 @@ pipeline {
 		      }
 	}
 	
-	stage('Logging into AWS ECR') {
-            steps {
-                script {
-                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                }
-                 
-            }
-        }
+	
         
 	stage('Building our image') { 
             steps { 
                 script { 
-			dockerImage = docker.build "${IMAGE_REPO_NAME}":"${BUILD_NUMBER}" 
+			dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             } 
         }
         stage('Pushing to ECR') { 
             steps { 
                 script { 
-			sh "docker tag ${IMAGE_REPO_NAME}:${BUILD_NUMBER} ${REPOSITORY_URI}:${BUILD_NUMBER}"
-                        sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${BUILD_NUMBER}"
+			 docker.withRegistry( 'https://295317182281.dkr.ecr.us-east-2.amazonaws.com', registryCredential ) {
+                         dockerImage.push()
+
                    }
                 } 
             }
          
         stage('Cleaning up') { 
             steps { 
-		    sh "docker rmi ${IMAGE_REPO_NAME}:$BUILD_NUMBER" 
+		    sh "docker rmi $registry:$BUILD_NUMBER" 
         } 
       }
    }
