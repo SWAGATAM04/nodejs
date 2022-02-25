@@ -49,12 +49,12 @@ pipeline {
                    }
                 } 
             }
-        } 
+         
         stage('Cleaning up') { 
             steps { 
 		    sh "docker rmi ${IMAGE_REPO_NAME}:$BUILD_NUMBER" 
         } 
       }
    }
-}	
+	
     
