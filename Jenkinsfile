@@ -38,7 +38,7 @@ pipeline {
         stage('Pushing to ECR') { 
             steps { 
                 script { 
-			 docker.withRegistry( 'https://295317182281.dkr.ecr.us-east-2.amazonaws.com', registryCredential ) {
+			 docker.withRegistry('https://295317182281.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-2:ecr-cred') {
                          dockerImage.push()
 
                    }
