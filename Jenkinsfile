@@ -53,7 +53,7 @@ pipeline {
       
 	 stage('Deploy Image to ECS'){
 		 steps {
-			 sh deploy.sh
+			 sh "sh deploy.sh"
    }
 }	
     
