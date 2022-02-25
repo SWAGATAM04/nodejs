@@ -56,8 +56,8 @@ pipeline {
 			 sh "REGION=us-east-2"
                          sh "REPOSITORY_NAME=nodejs-build"
                          sh "CLUSTER=node-js-app-production-cluster"
-                         sh "FAMILY=$(sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json)"
-                         sh "NAME=$(sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json)"
+                         sh "FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
+                         sh "NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
                          sh "SERVICE_NAME=${NAME}-service"
 			 sh "env"
                          sh "aws configure list"
