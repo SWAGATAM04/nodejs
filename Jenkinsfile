@@ -7,12 +7,6 @@ pipeline {
         registry = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         dockerImage = '' 
 	registryCredential = 'ecr-cred'
-	REGION=us-east-2
-        REPOSITORY_NAME=nodejs-build
-        CLUSTER=node-js-app-production-cluster
-        FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
-        NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
-        SERVICE_NAME=${NAME}-service
     }
     agent any 
       stages { 
@@ -59,6 +53,12 @@ pipeline {
       
 	 stage('Deploy Image to ECS'){
 		 steps {
+			 REGION=us-east-2
+                         REPOSITORY_NAME=nodejs-build
+                         CLUSTER=node-js-app-production-cluster
+                         FAMILY=`sed -n 's/.*"family": "\(.*\)",/\1/p' taskdef.json`
+                         NAME=`sed -n 's/.*"name": "\(.*\)",/\1/p' taskdef.json`
+                         SERVICE_NAME=${NAME}-service
 			 env
                          aws configure list
                          echo $HOME
