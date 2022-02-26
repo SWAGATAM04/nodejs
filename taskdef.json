@@ -4,10 +4,6 @@
      "requiresCompatibilities": [
         "FARGATE"
     ],
-    "networkMode": "awsvpc",
-    "memory": "512",
-    "cpu": "256"
-   },
     "containerDefinitions": [
         {
             "image": "%REPOSITORY_URI%:%BUILD_NUMBER%",
@@ -23,4 +19,8 @@
             ]
         }
     ]
+    "networkMode": "awsvpc",
+    "memory": "512",
+    "cpu": "256"
+  
 }
