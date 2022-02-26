@@ -9,7 +9,7 @@
             "essential": true,
             "networkMode": "awsvpc",
             "entryPoint": [],
-            requires_compatibilities = ["FARGATE"],
+            "requires_compatibilities": ["FARGATE"],
             "portMappings": [
                 {
                     "containerPort": 80,
