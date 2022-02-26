@@ -22,5 +22,5 @@
     "networkMode": "awsvpc",
     "memory": "512",
     "cpu": "256",
-     "execution_role_arn": "arn:aws:iam::295317182281:role/node-js-app-execution-task-role"
+    "executionRoleArn": "arn:aws:iam::295317182281:role/node-js-app-execution-task-role"
 }
