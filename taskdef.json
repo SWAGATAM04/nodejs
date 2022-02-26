@@ -7,6 +7,9 @@
             "cpu": 256,
             "memory": 512,
             "essential": true,
+            "networkMode": "awsvpc",
+            "entryPoint": [],
+            requires_compatibilities = ["FARGATE"],
             "portMappings": [
                 {
                     "containerPort": 80,
