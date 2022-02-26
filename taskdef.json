@@ -4,8 +4,8 @@
         {
             "image": "%REPOSITORY_URI%:v_%BUILD_NUMBER%",
             "name": "node-js-app-task",
-            "cpu": 10,
-            "memory": 256,
+            "cpu": 256,
+            "memory": 512,
             "essential": true,
             "portMappings": [
                 {
