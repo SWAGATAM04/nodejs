@@ -7,7 +7,7 @@
     "containerDefinitions": [
         {
             "image": "%REPOSITORY_URI%:%BUILD_NUMBER%",
-            "name": "nodejs-build",
+            "name": "node-js-app-task",
             "cpu": 256,
             "memory": 512,
             "essential": true,
