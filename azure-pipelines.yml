@@ -88,6 +88,7 @@ stages:
        # maxParallel: 2
         preDeploy:
           steps:
+          - script: Downloading Jfrog Artifacts
           - task: ArtifactoryGenericDownload@3
             inputs:
               connection: 'jfrog'
@@ -103,11 +104,7 @@ stages:
                 }
               failNoOp: true
 
-         # - task: DownloadPipelineArtifact@2
-          #  inputs:
-          #    artifact: 'drop'
-          #    path: $(Build.SourcesDirectory)        
-          #- script: echo Download Artifacts
+        
         deploy:
           steps:
           - script: echo Unarchieving artifacts
