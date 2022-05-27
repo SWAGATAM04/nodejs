@@ -1,29 +1,137 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# Node.js
+
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
 - master
 
-resources:
-- repo: self
 
-variables:
-  tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
-  displayName: Build image
-  jobs:
+  displayName: Build stage
+  jobs:  
   - job: Build
     displayName: Build
-    pool:
-      vmImage: ubuntu-latest
+    pool: windows
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: SonarQubePrepare@5
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+        SonarQube: 'sonar'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'Ericsson-Demo_Ericsson-Demo_AYC-UmSs0lqEB4wZWcJi'
+        cliProjectName: 'Ericsson-Demo'
+        cliSources: '.'
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12.x'
+      displayName: 'Install Node.js'
+    - script: |
+        npm install
+        npm run build --if-present
+        npm install mocha-junit-reporter
+        npm test
+    
+    - task: SonarQubeAnalyze@5
+    - task: SonarQubePublish@5
+      inputs:
+        pollingTimeoutSec: '300'
+        
+   
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '$(Build.SourcesDirectory)/test-results.xml'
+        testRunTitle: 'test'
+       
+      displayName: 'npm install, build and test'
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+    - task: ArtifactoryGenericUpload@2
+      inputs:
+       artifactoryService: 'jfrog'
+       specSource: 'taskConfiguration'
+       fileSpec: |
+         {
+           "files": [
+             {
+               "pattern": "*.zip",
+               "target": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+             }
+           ]
+         }
+       failNoOp: true
+      
+
+- stage: Deploy
+  jobs:  
+  - deployment: VMDeploy
+    displayName: web
+    environment:
+      name:  windowsnpm
+      resourceType: VirtualMachine
+      tags: windows
+    strategy:
+      runOnce:
+       # maxParallel: 2
+        preDeploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: 'drop'
+              path: $(Build.SourcesDirectory)        
+          - script: echo Download Artifacts
+        deploy:
+          steps:
+          - script: echo Unarchieving artifacts
+          - task: ExtractFiles@1
+            inputs:
+               archiveFilePatterns: '*.zip' 
+               destinationFolder: $(Build.SourcesDirectory)/drop
+               cleanDestinationFolder: true
+               overwriteExistingFiles: true
+               #pathToSevenZipTool: 
+          - script: npm -v
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Modify deployment script based on the app type
+                echo "Starting deployment script run"
+                echo "Starting npm"
+                
+                new-item -itemtype file -path $(Build.SourcesDirectory)/drop -name ".env" -force -value '
+                command=$(command)
+                db_name=$(db_name)
+                username=$(username)
+                '
+                cd $(Build.SourcesDirectory)/drop
+                npm i
+                #echo "Removing old zip"
+                #rm -rf $PWD/drop/*.zip
+                #rm -rf $(Build.SourcesDirectory)/*.zip
+               # workingDirectory: '$(Build.ArtifactStagingDirectory)'
+#- stage: BlackDuckScan
+#  displayName: BlackDuckScan
+#  jobs:  
+#    - job: BlackDuckScan
+#      displayName: DuckBuckScan
+#      pool: windows
+#      steps:    
+#          - task: SynopsysDetectTask@7
+#            inputs:
+#              BlackDuckService: 'blackduck'
+#              DetectVersion: 'latest'
+#              DetectFolder: '$(Build.SourcesDirectory)/drop'
