@@ -67,7 +67,7 @@ stages:
          {
            "files": [
              {
-               "pattern": "*.zip",
+               "pattern": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip",
                "target": "/test/"
              }
            ]
