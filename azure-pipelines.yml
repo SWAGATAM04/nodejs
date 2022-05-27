@@ -88,11 +88,26 @@ stages:
        # maxParallel: 2
         preDeploy:
           steps:
-          - task: DownloadPipelineArtifact@2
+          - task: ArtifactoryGenericDownload@3
             inputs:
-              artifact: 'drop'
-              path: $(Build.SourcesDirectory)        
-          - script: echo Download Artifacts
+              connection: 'jfrog'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "/test/$(Build.BuildId).zip",
+                      "target": "$(Build.SourcesDirectory)"
+                    }
+                  ]
+                }
+              failNoOp: true
+
+         # - task: DownloadPipelineArtifact@2
+          #  inputs:
+          #    artifact: 'drop'
+          #    path: $(Build.SourcesDirectory)        
+          #- script: echo Download Artifacts
         deploy:
           steps:
           - script: echo Unarchieving artifacts
