@@ -72,7 +72,7 @@ stages:
              }
            ]
          }
-       failNoOp: false
+       failNoOp: true
       
 
 - stage: Deploy
