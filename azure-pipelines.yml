@@ -110,7 +110,7 @@ stages:
           - script: echo Unarchieving artifacts
           - task: ExtractFiles@1
             inputs:
-               archiveFilePatterns: '*.zip' 
+               archiveFilePatterns: 'C:\artifacts\$(Build.BuildId).zip' 
                destinationFolder: C:\artifacts\drop
                cleanDestinationFolder: true
                overwriteExistingFiles: true
