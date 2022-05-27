@@ -98,7 +98,7 @@ stages:
                   "files": [
                     {
                       "pattern": "/test/$(Build.BuildId).zip",
-                      "target": "C:\artifacts"
+                      "target": "C:\artifacts\$(Build.BuildId).zip"
                     }
                   ]
                 }
