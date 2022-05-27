@@ -88,7 +88,7 @@ stages:
        # maxParallel: 2
         preDeploy:
           steps:
-          - script: Downloading Jfrog Artifacts
+          - script: echo Downloading Jfrog Artifacts
           - task: ArtifactoryGenericDownload@3
             inputs:
               connection: 'jfrog'
