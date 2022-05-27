@@ -97,7 +97,7 @@ stages:
                   "files": [
                     {
                       "pattern": "/test/$(Build.BuildId).zip",
-                      "target": "$(Build.SourcesDirectory)"
+                      "target": "C:\artifacts"
                     }
                   ]
                 }
@@ -114,7 +114,7 @@ stages:
           - task: ExtractFiles@1
             inputs:
                archiveFilePatterns: '*.zip' 
-               destinationFolder: $(Build.SourcesDirectory)/drop
+               destinationFolder: C:\artifacts\drop
                cleanDestinationFolder: true
                overwriteExistingFiles: true
                #pathToSevenZipTool: 
@@ -127,12 +127,12 @@ stages:
                 echo "Starting deployment script run"
                 echo "Starting npm"
                 
-                new-item -itemtype file -path $(Build.SourcesDirectory)/drop -name ".env" -force -value '
+                new-item -itemtype file -path C:\artifacts\drop -name ".env" -force -value '
                 command=$(command)
                 db_name=$(db_name)
                 username=$(username)
                 '
-                cd $(Build.SourcesDirectory)/drop
+                cd "C:\artifacts\drop"
                 npm i
                 #echo "Removing old zip"
                 #rm -rf $PWD/drop/*.zip
